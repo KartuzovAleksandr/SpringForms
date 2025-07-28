@@ -12,10 +12,13 @@
 Используются библиотеки:
 - lombok для упрощения работы с классами (Getters / Setters / Constructors),
 - faker для генерации случайных данных
-- thymeleaf как шаблонизатор HTML (как в примере SpringMVC), т.к. JSP не работает нормально со Spring (см. SpringFormsJSP)
-- Bootstrap для красоты оформления (или обычные стили как в orders_css.html) 
-- Spring Forms для редактирования / добавления записей
-- Spring Data для связи с БД
-- Spring Web Services для оформления контроллера как сервис
+- thymeleaf как шаблонизатор HTML 
+- Spring Forms для редактирования / добавления записей 
+- (но у меня JSP не интегрировался с Embedded Tomcat - см. SpringFormsJSP)
+- поэтому я использовал <input type="text" th:field="..."> из ThymeLeaf
+- Spring Data для связи с БД H2
+- Spring Web Services для оформления контроллера как сервис (?)
+- или создание нового заказа с передачей брокеру сообщений Kafka (?)
+- Bootstrap для красоты оформления (или обычные стили как в orders_css.html)
 
 ### Проверка работы <localhost:8080/orders>
