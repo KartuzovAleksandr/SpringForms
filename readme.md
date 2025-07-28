@@ -18,4 +18,4 @@
 - Spring Data для связи с БД
 - Spring Web Services для оформления контроллера как сервис
 
-### Проверка работы localhost:8080/orders
+### Проверка работы <localhost:8080/orders>
