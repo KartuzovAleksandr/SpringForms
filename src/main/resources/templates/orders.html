@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Полученные заказы</title>
+    <style>
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>Заказы</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Покупатель</th>
+        <th>Товар</th>
+        <th>Цена</th>
+        <th>Количество</th>
+        <th>Итого</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.customer}">Иван Петров</td>
+        <td th:text="${order.product}">Ноутбук</td>
+        <td th:text="${#numbers.formatDecimal(order.price, 1, 'COMMA', 2, 'POINT')} + ' ₽'">25000.00</td>
+        <td th:text="${order.quantity}">2</td>
+        <td th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 2, 'POINT')} + ' ₽'">50000.00</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
