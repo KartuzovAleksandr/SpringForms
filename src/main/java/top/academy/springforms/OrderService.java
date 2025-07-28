@@ -39,10 +39,9 @@ public class OrderService {
             String customer = faker.name().fullName();
             String product = faker.commerce().productName();
             // цена в диапазоне
-            double price = Double.parseDouble(faker.commerce().price(10, 2000));
-            // double price = 10 + (random.nextDouble() * 2000); // от 10 до 2010
-            // Округление до 2 знаков
-            // price = Math.round(price * 100.0) / 100.0;
+            // double price = Double.parseDouble(faker.commerce().price(10, 2000));
+            double price = 10 + (random.nextDouble() * 2000); // от 10 до 2010
+            price = Math.round(price * 100.0) / 100.0;
             int quantity = 1 + random.nextInt(10); // от 1 до 10
 
             Order order = new Order(id, customer, product, price, quantity);

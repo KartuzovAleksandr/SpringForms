@@ -1,92 +1,114 @@
 <!DOCTYPE html>
-<html lang="ru"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:form="http://www.springframework.org/tags/form">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Заказы с редактированием</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        table, .form-container { width: 80%; margin: 20px auto; border-collapse: collapse; }
-        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
-        th { background-color: #f4f4f4; }
-        .form-container {
-            padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; margin-bottom: 20px;
-        }
-        .btn {
-            padding: 6px 10px; margin: 2px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;
-        }
-        .btn-success { background: #28a745; color: white; }
-        .btn-warning { background: #ffc107; }
-        .btn-danger { background: #dc3545; color: white; }
-        .btn-primary { background: #007bff; color: white; }
-        input[type=text], input[type=number] {
-            width: 100%; padding: 6px; margin: 4px 0; border: 1px solid #ccc; border-radius: 4px;
-        }
-        .edit-mode { background: #fffacd; }
-    </style>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
 </head>
-<body>
-<h1>📋 Заказы (редактирование и удаление)</h1>
+<body class="bg-light">
 
-<!-- Форма добавления/редактирования -->
-<div class="form-container" th:classappend="${order.id} ? 'edit-mode' : ''">
-    <h2 th:text="${order.id} ? '✏️ Редактировать заказ' : '➕ Новый заказ'">Добавить заказ</h2>
+<div class="container mt-4">
 
-    <!-- Используем Spring Form Taglib -->
-    <form:form action="#" th:action="${order.id} ? @{/orders/update} : @{/orders}"
-               modelAttribute="order" method="post">
-        <form:input type="hidden" path="id" />
+    <h1 class="text-center mb-4">
+        <i class="bi bi-cart-check"></i> Заказы
+    </h1>
 
-        <label>Покупатель:</label>
-        <form:input path="customer" required="true" />
+    <!-- Форма добавления/редактирования -->
+    <div class="card mb-4 shadow-sm" th:classappend="${order.id} ? 'border-warning' : ''">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <span th:text="${order.id} ? '✏️ Редактировать заказ' : '➕ Новый заказ'">Новый заказ</span>
+            </h5>
+        </div>
+        <div class="card-body">
+            <form th:action="${order.id} ? @{/orders/update} : @{/orders}"
+                  th:object="${order}" method="post">
 
-        <label>Товар:</label>
-        <form:input path="product" required="true" />
+                <!-- Скрытое поле ID -->
+                <input type="hidden" th:field="*{id}" />
 
-        <label>Цена:</label>
-        <form:input type="number" step="0.01" path="price" required="true" />
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Покупатель</label>
+                        <input type="text" th:field="*{customer}" class="form-control" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Товар</label>
+                        <input type="text" th:field="*{product}" class="form-control" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Цена (₽)</label>
+                        <input type="number" step="0.01" th:field="*{price}" class="form-control" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Количество</label>
+                        <input type="number" th:field="*{quantity}" class="form-control" required min="1" />
+                    </div>
+                </div>
 
-        <label>Количество:</label>
-        <form:input type="number" path="quantity" required="true" min="1" />
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i>
+                        <span th:text="${order.id} ? ' Обновить' : ' Добавить'"></span>
+                    </button>
+                    <a href="/orders" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Отмена
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
 
-        <br/>
-        <button type="submit" class="btn btn-primary">
-            <span th:text="${order.id} ? '✅ Обновить' : '➕ Добавить'"></span>
-        </button>
-        <a href="/orders" class="btn">Отмена</a>
-    </form:form>
+    <!-- Таблица заказов -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Список заказов</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>Покупатель</th>
+                    <th>Товар</th>
+                    <th>Цена</th>
+                    <th>Кол-во</th>
+                    <th>Итого</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="o : ${orders}">
+                    <td th:text="${o.customer}"></td>
+                    <td th:text="${o.product}"></td>
+                    <td th:text="${#numbers.formatDecimal(o.price, 1, 'COMMA', 2, 'POINT')} + ' ₽'"></td>
+                    <td th:text="${o.quantity}"></td>
+                    <td th:text="${#numbers.formatDecimal(o.total, 1, 'COMMA', 2, 'POINT')} + ' ₽'"></td>
+                    <td>
+                        <a th:href="@{/orders/edit/{id}(id=${o.id})}"
+                           class="btn btn-sm btn-warning text-white me-1">
+                            <i class="bi bi-pencil"></i>
+                        </a>
+                        <form th:action="@{/orders/delete/{id}(id=${o.id})}"
+                              method="post" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Удалить заказ?')">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
-<!-- Таблица заказов -->
-<table>
-    <thead>
-    <tr>
-        <th>Покупатель</th>
-        <th>Товар</th>
-        <th>Цена</th>
-        <th>Кол-во</th>
-        <th>Итого</th>
-        <th>Действия</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="o : ${orders}">
-        <td th:text="${o.customer}"></td>
-        <td th:text="${o.product}"></td>
-        <td th:text="${#numbers.formatDecimal(o.price, 1, 'COMMA', 2, 'POINT')} + ' ₽'"></td>
-        <td th:text="${o.quantity}"></td>
-        <td th:text="${#numbers.formatDecimal(o.total, 1, 'COMMA', 2, 'POINT')} + ' ₽'"></td>
-        <td>
-            <a th:href="@{/orders/edit/{id}(id=${o.id})}" class="btn btn-warning">✏️</a>
-            <form th:action="@{/orders/delete/{id}(id=${o.id})}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Удалить заказ?')">
-                    🗑️
-                </button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<!-- Bootstrap JS (опционально, если нужен JS-функционал) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -13,7 +13,7 @@
 - lombok для упрощения работы с классами (Getters / Setters / Constructors),
 - faker для генерации случайных данных
 - thymeleaf как шаблонизатор HTML (как в примере SpringMVC), т.к. JSP не работает нормально со Spring (см. SpringFormsJSP)
-- для красоты оформления можно использовать стили CSS или Bootstrap
+- Bootstrap для красоты оформления (или обычные стили как в orders_css.html) 
 - Spring Forms для редактирования / добавления записей
 - Spring Data для связи с БД
 - Spring Web Services для оформления контроллера как сервис

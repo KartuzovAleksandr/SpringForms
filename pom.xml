@@ -50,12 +50,12 @@
             <artifactId>datafaker</artifactId>
             <version>1.9.0</version>
         </dependency>
-        <!-- JSTL для form taglib (нужен для <form:...>) -->
-        <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-            <version>3.0.1</version>
-        </dependency>
+<!--        &lt;!&ndash; JSTL для form taglib (нужен для <form:...>) &ndash;&gt;-->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.web</groupId>-->
+<!--            <artifactId>jakarta.servlet.jsp.jstl</artifactId>-->
+<!--            <version>3.0.1</version>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
