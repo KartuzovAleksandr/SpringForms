@@ -1,46 +1,90 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<html lang="ru"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:form="http://www.springframework.org/tags/form">
 <head>
     <meta charset="UTF-8">
-    <title>Полученные заказы</title>
+    <title>Заказы с редактированием</title>
     <style>
-        table {
-            width: 80%;
-            margin: 20px auto;
-            border-collapse: collapse;
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table, .form-container { width: 80%; margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #f4f4f4; }
+        .form-container {
+            padding: 15px; border: 1px solid #ddd; border-radius: 8px; background: #f9f9f9; margin-bottom: 20px;
         }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
+        .btn {
+            padding: 6px 10px; margin: 2px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;
         }
-        th {
-            background-color: #f4f4f4;
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-primary { background: #007bff; color: white; }
+        input[type=text], input[type=number] {
+            width: 100%; padding: 6px; margin: 4px 0; border: 1px solid #ccc; border-radius: 4px;
         }
-        h1 {
-            text-align: center;
-        }
+        .edit-mode { background: #fffacd; }
     </style>
 </head>
 <body>
-<h1>Заказы</h1>
+<h1>📋 Заказы (редактирование и удаление)</h1>
+
+<!-- Форма добавления/редактирования -->
+<div class="form-container" th:classappend="${order.id} ? 'edit-mode' : ''">
+    <h2 th:text="${order.id} ? '✏️ Редактировать заказ' : '➕ Новый заказ'">Добавить заказ</h2>
+
+    <!-- Используем Spring Form Taglib -->
+    <form:form action="#" th:action="${order.id} ? @{/orders/update} : @{/orders}"
+               modelAttribute="order" method="post">
+        <form:input type="hidden" path="id" />
+
+        <label>Покупатель:</label>
+        <form:input path="customer" required="true" />
+
+        <label>Товар:</label>
+        <form:input path="product" required="true" />
+
+        <label>Цена:</label>
+        <form:input type="number" step="0.01" path="price" required="true" />
+
+        <label>Количество:</label>
+        <form:input type="number" path="quantity" required="true" min="1" />
+
+        <br/>
+        <button type="submit" class="btn btn-primary">
+            <span th:text="${order.id} ? '✅ Обновить' : '➕ Добавить'"></span>
+        </button>
+        <a href="/orders" class="btn">Отмена</a>
+    </form:form>
+</div>
+
+<!-- Таблица заказов -->
 <table>
     <thead>
     <tr>
         <th>Покупатель</th>
         <th>Товар</th>
         <th>Цена</th>
-        <th>Количество</th>
+        <th>Кол-во</th>
         <th>Итого</th>
+        <th>Действия</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="order : ${orders}">
-        <td th:text="${order.customer}">Иван Петров</td>
-        <td th:text="${order.product}">Ноутбук</td>
-        <td th:text="${#numbers.formatDecimal(order.price, 1, 'COMMA', 2, 'POINT')} + ' ₽'">25000.00</td>
-        <td th:text="${order.quantity}">2</td>
-        <td th:text="${#numbers.formatDecimal(order.total, 1, 'COMMA', 2, 'POINT')} + ' ₽'">50000.00</td>
+    <tr th:each="o : ${orders}">
+        <td th:text="${o.customer}"></td>
+        <td th:text="${o.product}"></td>
+        <td th:text="${#numbers.formatDecimal(o.price, 1, 'COMMA', 2, 'POINT')} + ' ₽'"></td>
+        <td th:text="${o.quantity}"></td>
+        <td th:text="${#numbers.formatDecimal(o.total, 1, 'COMMA', 2, 'POINT')} + ' ₽'"></td>
+        <td>
+            <a th:href="@{/orders/edit/{id}(id=${o.id})}" class="btn btn-warning">✏️</a>
+            <form th:action="@{/orders/delete/{id}(id=${o.id})}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Удалить заказ?')">
+                    🗑️
+                </button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
